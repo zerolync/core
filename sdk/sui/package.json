@@ -1,0 +1,60 @@
+{
+  "name": "@zerolync/passkey-sui",
+  "version": "0.1.0",
+  "description": "Sui passkey authentication SDK - React hooks for passwordless Sui wallets using WebAuthn",
+  "license": "MIT",
+  "author": "Zerolync",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zerolync/zerolync-passkey-sdk",
+    "directory": "sdk/sui"
+  },
+  "keywords": [
+    "sui",
+    "passkey",
+    "webauthn",
+    "wallet",
+    "react",
+    "hooks",
+    "blockchain",
+    "authentication",
+    "web3"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts --external react --external react-dom",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --external react --external react-dom --watch",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "pnpm build"
+  },
+  "dependencies": {
+    "@mysten/sui": "^1.0.0",
+    "@zerolync/passkey-core": "workspace:*",
+    "buffer": "^6.0.3"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.3.0"
+  },
+  "peerDependencies": {
+    "react": "^18.3.1 || ^19.0.0",
+    "react-dom": "^18.3.1 || ^19.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

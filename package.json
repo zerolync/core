@@ -1,0 +1,16 @@
+{
+  "name": "zerolync-passkey-sdk",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "sdk/*",
+    "services/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "pnpm --filter demo dev",
+    "build": "pnpm -r build",
+    "clean": "pnpm -r clean"
+  },
+  "packageManager": "pnpm@9.0.0"
+}
