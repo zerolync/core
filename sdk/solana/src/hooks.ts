@@ -1,6 +1,6 @@
 import { useWallet as useLazorWallet } from '@lazorkit/wallet';
-import { PasskeyStorage, debugLog } from '@zerolync/passkey-core';
-import type { WalletInfo } from '@zerolync/passkey-core';
+import { PasskeyStorage, debugLog } from '@zero-lync/passkey-core';
+import type { WalletInfo } from '@zero-lync/passkey-core';
 import { clearLazorKitStorage } from './storage-wrapper';
 import { useEffect, useRef } from 'react';
 import { useSolanaContext } from './provider';

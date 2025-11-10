@@ -19,13 +19,13 @@ importers:
       '@solana/web3.js':
         specifier: ^1.98.2
         version: 1.98.4(bufferutil@4.0.9)(typescript@5.9.3)(utf-8-validate@5.0.10)
-      '@zerolync/passkey-core':
+      '@zero-lync/passkey-core':
         specifier: workspace:*
         version: link:../../sdk/core
-      '@zerolync/passkey-solana':
+      '@zero-lync/passkey-solana':
         specifier: workspace:*
         version: link:../../sdk/solana
-      '@zerolync/passkey-sui':
+      '@zero-lync/passkey-sui':
         specifier: workspace:*
         version: link:../../sdk/sui
       next:
@@ -80,7 +80,7 @@ importers:
       '@solana/web3.js':
         specifier: ^1.98.2
         version: 1.98.4(bufferutil@4.0.9)(typescript@5.7.3)(utf-8-validate@5.0.10)
-      '@zerolync/passkey-core':
+      '@zero-lync/passkey-core':
         specifier: workspace:*
         version: link:../core
       react:
@@ -108,7 +108,7 @@ importers:
       '@mysten/sui':
         specifier: ^1.0.0
         version: 1.44.0(typescript@5.7.3)
-      '@zerolync/passkey-core':
+      '@zero-lync/passkey-core':
         specifier: workspace:*
         version: link:../core
       buffer:

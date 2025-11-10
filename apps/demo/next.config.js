@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ['@zerolync/passkey-core', '@zerolync/passkey-solana', '@zerolync/passkey-sui'],
+  transpilePackages: ['@zero-lync/passkey-core', '@zero-lync/passkey-solana', '@zero-lync/passkey-sui'],
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {

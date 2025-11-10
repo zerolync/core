@@ -1,7 +1,7 @@
 'use client';
 
-import { SolanaPasskeyProvider, useSolanaPasskey } from '@zerolync/passkey-solana';
-import { SuiPasskeyProvider, useSuiPasskey } from '@zerolync/passkey-sui';
+import { SolanaPasskeyProvider, useSolanaPasskey } from '@zero-lync/passkey-solana';
+import { SuiPasskeyProvider, useSuiPasskey } from '@zero-lync/passkey-sui';
 import { useState } from 'react';
 import { Transaction } from '@mysten/sui/transactions';
 import { SuiClient } from '@mysten/sui/client';

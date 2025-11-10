@@ -1,4 +1,4 @@
-# @zerolync/passkey-solana
+# @zero-lync/passkey-solana
 
 Solana passkey authentication SDK - React hooks for passwordless Solana wallets using WebAuthn.
 
@@ -18,11 +18,11 @@ This package provides React hooks and components for integrating passkey-based a
 ## Installation
 
 ```bash
-npm install @zerolync/passkey-solana @solana/web3.js
+npm install @zero-lync/passkey-solana @solana/web3.js
 # or
-pnpm add @zerolync/passkey-solana @solana/web3.js
+pnpm add @zero-lync/passkey-solana @solana/web3.js
 # or
-yarn add @zerolync/passkey-solana @solana/web3.js
+yarn add @zero-lync/passkey-solana @solana/web3.js
 ```
 
 ## Quick Start
@@ -30,7 +30,7 @@ yarn add @zerolync/passkey-solana @solana/web3.js
 ### 1. Wrap your app with the provider
 
 ```tsx
-import { SolanaPasskeyProvider } from '@zerolync/passkey-solana';
+import { SolanaPasskeyProvider } from '@zero-lync/passkey-solana';
 
 function App() {
   return (
@@ -48,7 +48,7 @@ function App() {
 ### 2. Use the hook in your components
 
 ```tsx
-import { useSolanaPasskey } from '@zerolync/passkey-solana';
+import { useSolanaPasskey } from '@zero-lync/passkey-solana';
 import { SystemProgram, PublicKey, LAMPORTS_PER_SOL } from '@solana/web3.js';
 
 function Wallet() {
@@ -192,7 +192,7 @@ await signAndSendTransaction(instructions);
 
 ### Development
 
-For local development, you'll need to run a portal service. See the [@zerolync/portal](../../services/portal) package for setup instructions.
+For local development, you'll need to run a portal service. See the [@zero-lync/portal](../../services/portal) package for setup instructions.
 
 ### Environment Variables
 
@@ -204,11 +204,11 @@ NEXT_PUBLIC_PAYMASTER_URL=https://your-paymaster.com  # optional
 
 ## Cross-Chain Usage
 
-The same passkey can be used across multiple chains. Combine with `@zerolync/passkey-sui`:
+The same passkey can be used across multiple chains. Combine with `@zero-lync/passkey-sui`:
 
 ```tsx
-import { SolanaPasskeyProvider } from '@zerolync/passkey-solana';
-import { SuiPasskeyProvider } from '@zerolync/passkey-sui';
+import { SolanaPasskeyProvider } from '@zero-lync/passkey-solana';
+import { SuiPasskeyProvider } from '@zero-lync/passkey-sui';
 
 function App() {
   return (
@@ -223,8 +223,8 @@ function App() {
 
 ## Related Packages
 
-- [@zerolync/passkey-core](../core) - Core utilities and types
-- [@zerolync/passkey-sui](../sui) - Sui passkey authentication
+- [@zero-lync/passkey-core](../core) - Core utilities and types
+- [@zero-lync/passkey-sui](../sui) - Sui passkey authentication
 
 ## License
 

@@ -1,4 +1,4 @@
-# @zerolync/passkey-sui
+# @zero-lync/passkey-sui
 
 Sui passkey authentication SDK - React hooks for passwordless Sui wallets using WebAuthn.
 
@@ -19,11 +19,11 @@ This package provides React hooks and components for integrating passkey-based a
 ## Installation
 
 ```bash
-npm install @zerolync/passkey-sui @mysten/sui
+npm install @zero-lync/passkey-sui @mysten/sui
 # or
-pnpm add @zerolync/passkey-sui @mysten/sui
+pnpm add @zero-lync/passkey-sui @mysten/sui
 # or
-yarn add @zerolync/passkey-sui @mysten/sui
+yarn add @zero-lync/passkey-sui @mysten/sui
 ```
 
 ## Quick Start
@@ -31,7 +31,7 @@ yarn add @zerolync/passkey-sui @mysten/sui
 ### 1. Wrap your app with the provider
 
 ```tsx
-import { SuiPasskeyProvider } from '@zerolync/passkey-sui';
+import { SuiPasskeyProvider } from '@zero-lync/passkey-sui';
 
 function App() {
   return (
@@ -48,7 +48,7 @@ function App() {
 ### 2. Use the hook in your components
 
 ```tsx
-import { useSuiPasskey } from '@zerolync/passkey-sui';
+import { useSuiPasskey } from '@zero-lync/passkey-sui';
 import { Transaction } from '@mysten/sui/transactions';
 
 function Wallet() {
@@ -230,11 +230,11 @@ function ComplexTransaction() {
 
 ## Cross-Chain Usage
 
-The same passkey can be used across multiple chains. When combined with `@zerolync/passkey-solana`, the Sui wallet must be connected **after** the Solana wallet to reuse the passkey:
+The same passkey can be used across multiple chains. When combined with `@zero-lync/passkey-solana`, the Sui wallet must be connected **after** the Solana wallet to reuse the passkey:
 
 ```tsx
-import { SolanaPasskeyProvider, useSolanaPasskey } from '@zerolync/passkey-solana';
-import { SuiPasskeyProvider, useSuiPasskey } from '@zerolync/passkey-sui';
+import { SolanaPasskeyProvider, useSolanaPasskey } from '@zero-lync/passkey-solana';
+import { SuiPasskeyProvider, useSuiPasskey } from '@zero-lync/passkey-sui';
 
 function CrossChainWallet() {
   const solana = useSolanaPasskey();
@@ -266,7 +266,7 @@ function App() {
 
 ### Development
 
-For local development, you'll need to run a portal service. See the [@zerolync/portal](../../services/portal) package for setup instructions.
+For local development, you'll need to run a portal service. See the [@zero-lync/portal](../../services/portal) package for setup instructions.
 
 ### Environment Variables
 
@@ -288,7 +288,7 @@ NEXT_PUBLIC_PORTAL_URL=http://localhost:5173
 
 This error occurs when trying to connect to Sui without first connecting to Solana. The Sui SDK reuses the passkey created by the Solana SDK, so you must:
 
-1. Connect to Solana first using `@zerolync/passkey-solana`
+1. Connect to Solana first using `@zero-lync/passkey-solana`
 2. Then connect to Sui using this SDK
 
 ### Transaction Fails with Signature Error
@@ -300,8 +300,8 @@ Ensure that:
 
 ## Related Packages
 
-- [@zerolync/passkey-core](../core) - Core utilities and types
-- [@zerolync/passkey-solana](../solana) - Solana passkey authentication
+- [@zero-lync/passkey-core](../core) - Core utilities and types
+- [@zero-lync/passkey-solana](../solana) - Solana passkey authentication
 
 ## License
 
