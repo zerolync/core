@@ -73,8 +73,8 @@ cd services/portal
 pnpm dev
 
 # Watch build for SDK packages
-pnpm --filter @zerolync/passkey-solana dev
-pnpm --filter @zerolync/passkey-sui dev
+pnpm --filter @zero-lync/passkey-solana dev
+pnpm --filter @zero-lync/passkey-sui dev
 ```
 
 ## Project Structure
@@ -82,9 +82,9 @@ pnpm --filter @zerolync/passkey-sui dev
 ```
 zerolync-passkey-sdk/
 ├── sdk/                    # SDK packages for npm
-│   ├── core/              # @zerolync/passkey-core
-│   ├── solana/            # @zerolync/passkey-solana
-│   └── sui/               # @zerolync/passkey-sui
+│   ├── core/              # @zero-lync/passkey-core
+│   ├── solana/            # @zero-lync/passkey-solana
+│   └── sui/               # @zero-lync/passkey-sui
 ├── services/              # Backend services
 │   └── portal/            # Signing portal UI
 ├── apps/                  # Example applications
@@ -177,7 +177,7 @@ We're working on adding automated tests. When available:
 pnpm test
 
 # Run tests for specific package
-pnpm --filter @zerolync/passkey-solana test
+pnpm --filter @zero-lync/passkey-solana test
 ```
 
 ## Submitting Changes

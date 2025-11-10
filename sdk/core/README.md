@@ -1,4 +1,4 @@
-# @zerolync/passkey-core
+# @zero-lync/passkey-core
 
 Core utilities and types for Zerolync Passkey SDK - cross-chain passkey authentication.
 
@@ -16,11 +16,11 @@ This package provides the core functionality shared across all Zerolync passkey 
 ## Installation
 
 ```bash
-npm install @zerolync/passkey-core
+npm install @zero-lync/passkey-core
 # or
-pnpm add @zerolync/passkey-core
+pnpm add @zero-lync/passkey-core
 # or
-yarn add @zerolync/passkey-core
+yarn add @zero-lync/passkey-core
 ```
 
 ## Usage
@@ -30,7 +30,7 @@ yarn add @zerolync/passkey-core
 The `PasskeyStorage` utility provides methods to manage wallet information across chains:
 
 ```typescript
-import { PasskeyStorage, type WalletInfo } from '@zerolync/passkey-core';
+import { PasskeyStorage, type WalletInfo } from '@zero-lync/passkey-core';
 
 // Save wallet info
 const walletInfo: WalletInfo = {
@@ -96,8 +96,8 @@ Removes wallet information from localStorage.
 
 ## Related Packages
 
-- [@zerolync/passkey-solana](../solana) - Solana passkey authentication
-- [@zerolync/passkey-sui](../sui) - Sui passkey authentication
+- [@zero-lync/passkey-solana](../solana) - Solana passkey authentication
+- [@zero-lync/passkey-sui](../sui) - Sui passkey authentication
 
 ## License
 

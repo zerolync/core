@@ -1,6 +1,6 @@
 import React, { createContext, useContext } from 'react';
 import { LazorkitProvider } from '@lazorkit/wallet';
-import { debugLog } from '@zerolync/passkey-core';
+import { debugLog } from '@zero-lync/passkey-core';
 
 /**
  * Props for the Solana Passkey Provider
@@ -40,7 +40,7 @@ const SolanaContext = createContext<SolanaContextValue | null>(null);
  *
  * @example
  * ```typescript
- * import { SolanaPasskeyProvider } from '@zerolync/passkey-solana';
+ * import { SolanaPasskeyProvider } from '@zero-lync/passkey-solana';
  *
  * function App() {
  *   return (

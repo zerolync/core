@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { PasskeyKeypair } from '@mysten/sui/keypairs/passkey';
 import { SuiClient } from '@mysten/sui/client';
 import { Transaction } from '@mysten/sui/transactions';
-import { PasskeyStorage, debugLog } from '@zerolync/passkey-core';
+import { PasskeyStorage, debugLog } from '@zero-lync/passkey-core';
 import { useSuiContext } from './provider';
 import { Buffer } from 'buffer';
 import { bcs } from '@mysten/sui/bcs';

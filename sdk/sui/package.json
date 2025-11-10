@@ -1,5 +1,5 @@
 {
-  "name": "zerolync-sdk/passkey-sui",
+  "name": "@zero-lync/passkey-sui",
   "version": "0.1.0",
   "description": "Sui passkey authentication SDK - React hooks for passwordless Sui wallets using WebAuthn",
   "license": "MIT",
@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "@mysten/sui": "^1.0.0",
-    "@zerolync/passkey-core": "workspace:*",
+    "@zero-lync/passkey-core": "workspace:*",
     "buffer": "^6.0.3"
   },
   "devDependencies": {

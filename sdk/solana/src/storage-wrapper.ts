@@ -1,4 +1,4 @@
-import { errorLog } from '@zerolync/passkey-core';
+import { errorLog } from '@zero-lync/passkey-core';
 
 const LAZOR_STORAGE_KEYS = [
   'lazorkit-wallet',

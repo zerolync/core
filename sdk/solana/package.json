@@ -1,5 +1,5 @@
 {
-  "name": "zerolync-sdk/passkey-solana",
+  "name": "@zero-lync/passkey-solana",
   "version": "0.1.0",
   "description": "Solana passkey authentication SDK - React hooks for passwordless Solana wallets using WebAuthn",
   "license": "MIT",
@@ -41,7 +41,7 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@zerolync/passkey-core": "workspace:*",
+    "@zero-lync/passkey-core": "workspace:*",
     "@lazorkit/wallet": "^1.3.5",
     "@solana/web3.js": "^1.98.2",
     "zustand": "^5.0.5"

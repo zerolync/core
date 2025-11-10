@@ -21,9 +21,9 @@ This monorepo contains the following packages:
 
 | Package | Version | Description |
 |---------|---------|-------------|
-| [@zerolync/passkey-core](./sdk/core) | 0.1.0 | Core utilities and types |
-| [@zerolync/passkey-solana](./sdk/solana) | 0.1.0 | Solana passkey authentication |
-| [@zerolync/passkey-sui](./sdk/sui) | 0.1.0 | Sui passkey authentication |
+| [@zero-lync/passkey-core](./sdk/core) | 0.1.0 | Core utilities and types |
+| [@zero-lync/passkey-solana](./sdk/solana) | 0.1.0 | Solana passkey authentication |
+| [@zero-lync/passkey-sui](./sdk/sui) | 0.1.0 | Sui passkey authentication |
 
 ### Services
 
@@ -43,13 +43,13 @@ This monorepo contains the following packages:
 
 ```bash
 # Install Solana SDK
-npm install @zerolync/passkey-solana @solana/web3.js
+npm install @zero-lync/passkey-solana @solana/web3.js
 
 # Install Sui SDK
-npm install @zerolync/passkey-sui @mysten/sui
+npm install @zero-lync/passkey-sui @mysten/sui
 
 # Or install both for cross-chain support
-npm install @zerolync/passkey-solana @zerolync/passkey-sui @solana/web3.js @mysten/sui
+npm install @zero-lync/passkey-solana @zero-lync/passkey-sui @solana/web3.js @mysten/sui
 ```
 
 ### Basic Usage
@@ -57,7 +57,7 @@ npm install @zerolync/passkey-solana @zerolync/passkey-sui @solana/web3.js @myst
 #### Solana Wallet
 
 ```tsx
-import { SolanaPasskeyProvider, useSolanaPasskey } from '@zerolync/passkey-solana';
+import { SolanaPasskeyProvider, useSolanaPasskey } from '@zero-lync/passkey-solana';
 import { SystemProgram, PublicKey, LAMPORTS_PER_SOL } from '@solana/web3.js';
 
 function App() {
@@ -102,7 +102,7 @@ function Wallet() {
 #### Sui Wallet
 
 ```tsx
-import { SuiPasskeyProvider, useSuiPasskey } from '@zerolync/passkey-sui';
+import { SuiPasskeyProvider, useSuiPasskey } from '@zero-lync/passkey-sui';
 import { Transaction } from '@mysten/sui/transactions';
 
 function App() {
@@ -145,8 +145,8 @@ function Wallet() {
 #### Cross-Chain Wallet
 
 ```tsx
-import { SolanaPasskeyProvider, useSolanaPasskey } from '@zerolync/passkey-solana';
-import { SuiPasskeyProvider, useSuiPasskey } from '@zerolync/passkey-sui';
+import { SolanaPasskeyProvider, useSolanaPasskey } from '@zero-lync/passkey-solana';
+import { SuiPasskeyProvider, useSuiPasskey } from '@zero-lync/passkey-sui';
 
 function App() {
   return (
@@ -241,10 +241,10 @@ zerolync-passkey-sdk/
 pnpm build
 
 # Build specific package
-pnpm --filter @zerolync/passkey-solana build
+pnpm --filter @zero-lync/passkey-solana build
 
 # Watch mode for development
-pnpm --filter @zerolync/passkey-solana dev
+pnpm --filter @zero-lync/passkey-solana dev
 ```
 
 ### Running the Demo
@@ -274,7 +274,7 @@ Visit [http://localhost:5173](http://localhost:5173)
 
 ## Publishing
 
-The SDKs are published to npm under the `@zerolync` scope.
+The SDKs are published to npm under the `@zero-lync` scope.
 
 ### Publishing a Package
 
@@ -284,7 +284,7 @@ cd sdk/solana
 pnpm publish
 
 # Or from root
-pnpm --filter @zerolync/passkey-solana publish
+pnpm --filter @zero-lync/passkey-solana publish
 ```
 
 The `prepublishOnly` script will automatically build the package before publishing.
