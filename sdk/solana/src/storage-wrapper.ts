@@ -1,3 +1,5 @@
+import { errorLog } from '@zerolync/passkey-core';
+
 const LAZOR_STORAGE_KEYS = [
   'lazorkit-wallet',
   'lazorkit-credentials',
@@ -15,7 +17,7 @@ export function clearLazorKitStorage() {
     try {
       localStorage.removeItem(key);
     } catch (e) {
-      console.error('Failed to clear storage key:', key, e);
+      errorLog('Failed to clear storage key:', key, e);
     }
   });
 }

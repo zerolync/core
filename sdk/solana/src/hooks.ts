@@ -1,10 +1,45 @@
 import { useWallet as useLazorWallet } from '@lazorkit/wallet';
-import { PasskeyStorage } from '@zerolync/passkey-core';
+import { PasskeyStorage, debugLog } from '@zerolync/passkey-core';
 import type { WalletInfo } from '@zerolync/passkey-core';
 import { clearLazorKitStorage } from './storage-wrapper';
 import { useEffect, useRef } from 'react';
 import { useSolanaContext } from './provider';
 
+/**
+ * React hook for Solana passkey wallet operations
+ *
+ * @returns Wallet interface with connection, signing, and state management
+ *
+ * @remarks
+ * This hook provides a complete interface for interacting with a Solana wallet
+ * using passkey authentication. It handles:
+ * - Wallet connection with WebAuthn
+ * - Transaction signing and submission
+ * - Cross-chain address capture (Sui)
+ * - Wallet state management
+ *
+ * Must be used within a {@link SolanaPasskeyProvider}.
+ *
+ * @example
+ * ```typescript
+ * function MyComponent() {
+ *   const { address, isConnected, connect, signAndSendTransaction } = useSolanaPasskey();
+ *
+ *   const handleConnect = async () => {
+ *     try {
+ *       const result = await connect();
+ *       console.log('Connected:', result.smartWallet);
+ *     } catch (error) {
+ *       console.error('Failed to connect:', error);
+ *     }
+ *   };
+ *
+ *   return (
+ *     <button onClick={handleConnect}>Connect Wallet</button>
+ *   );
+ * }
+ * ```
+ */
 export function useSolanaPasskey() {
   const { portalUrl } = useSolanaContext();
   const {
@@ -37,7 +72,7 @@ export function useSolanaPasskey() {
 
       // Capture suiAddress from portal response
       if ((type === 'connect-result' || type === 'WALLET_CONNECTED') && data?.suiAddress) {
-        console.log('📨 Captured suiAddress from portal:', data.suiAddress);
+        debugLog('📨 Captured suiAddress from portal:', data.suiAddress);
         suiAddressRef.current = data.suiAddress;
       }
     };
@@ -71,7 +106,7 @@ export function useSolanaPasskey() {
         address: suiAddressRef.current,
         credentialId: result.credentialId,
       };
-      console.log('✅ Saved Sui address to storage:', suiAddressRef.current);
+      debugLog('✅ Saved Sui address to storage:', suiAddressRef.current);
     }
 
     PasskeyStorage.saveWallet(walletInfo);

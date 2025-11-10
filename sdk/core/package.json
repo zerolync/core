@@ -1,5 +1,5 @@
 {
-  "name": "@zerolync/passkey-core",
+  "name": "zerolync-sdk/passkey-core",
   "version": "0.1.0",
   "description": "Core utilities and types for Zerolync Passkey SDK - cross-chain passkey authentication",
   "license": "MIT",
