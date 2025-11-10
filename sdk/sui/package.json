@@ -1,5 +1,5 @@
 {
-  "name": "@zerolync/passkey-sui",
+  "name": "zerolync-sdk/passkey-sui",
   "version": "0.1.0",
   "description": "Sui passkey authentication SDK - React hooks for passwordless Sui wallets using WebAuthn",
   "license": "MIT",

@@ -1,5 +1,5 @@
 {
-  "name": "@zerolync/passkey-solana",
+  "name": "zerolync-sdk/passkey-solana",
   "version": "0.1.0",
   "description": "Solana passkey authentication SDK - React hooks for passwordless Solana wallets using WebAuthn",
   "license": "MIT",

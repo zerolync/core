@@ -2,11 +2,66 @@ import { useState, useCallback } from 'react';
 import { PasskeyKeypair } from '@mysten/sui/keypairs/passkey';
 import { SuiClient } from '@mysten/sui/client';
 import { Transaction } from '@mysten/sui/transactions';
-import { PasskeyStorage } from '@zerolync/passkey-core';
+import { PasskeyStorage, debugLog } from '@zerolync/passkey-core';
 import { useSuiContext } from './provider';
 import { Buffer } from 'buffer';
 import { bcs } from '@mysten/sui/bcs';
 
+/**
+ * React hook for Sui passkey wallet operations
+ *
+ * @returns Wallet interface with connection, signing, and state management
+ *
+ * @remarks
+ * This hook provides a complete interface for interacting with a Sui wallet
+ * using passkey authentication following SIP-9 (Sui Improvement Proposal 9).
+ * It handles:
+ * - Wallet connection using stored passkey credentials
+ * - Transaction signing with WebAuthn
+ * - SIP-9 compliant signature construction
+ * - Balance queries
+ *
+ * Must be used within a {@link SuiPasskeyProvider}.
+ *
+ * **Important**: You must connect to Solana first to generate the initial passkey
+ * credential before using this hook.
+ *
+ * @example
+ * ```typescript
+ * function MyComponent() {
+ *   const { address, isConnected, connect, signAndExecuteTransaction } = useSuiPasskey();
+ *
+ *   const handleConnect = async () => {
+ *     try {
+ *       const result = await connect();
+ *       console.log('Connected:', result.address);
+ *     } catch (error) {
+ *       console.error('Failed to connect:', error);
+ *     }
+ *   };
+ *
+ *   const handleTransfer = async () => {
+ *     const tx = new Transaction();
+ *     tx.setSender(address!);
+ *     const [coin] = tx.splitCoins(tx.gas, [1000000]);
+ *     tx.transferObjects([coin], recipientAddress);
+ *
+ *     const result = await signAndExecuteTransaction(tx);
+ *     console.log('Transaction:', result.digest);
+ *   };
+ *
+ *   return (
+ *     <div>
+ *       {!isConnected ? (
+ *         <button onClick={handleConnect}>Connect Wallet</button>
+ *       ) : (
+ *         <button onClick={handleTransfer}>Send SUI</button>
+ *       )}
+ *     </div>
+ *   );
+ * }
+ * ```
+ */
 export function useSuiPasskey() {
   const { rpcUrl, portalUrl } = useSuiContext();
   const [keypair, setKeypair] = useState<PasskeyKeypair | null>(null);
@@ -30,7 +85,7 @@ export function useSuiPasskey() {
       // Use the Sui address
       const suiAddress = storedWallet.sui.address;
 
-      console.log('✅ Sui wallet connected, address:', suiAddress);
+      debugLog('✅ Sui wallet connected, address:', suiAddress);
 
       setAddress(suiAddress);
 
@@ -72,7 +127,7 @@ export function useSuiPasskey() {
       const txBytesBase64 = Buffer.from(txBytes).toString('base64');
 
       // Open portal for signing
-      console.log('🔑 Opening portal for Sui signing...');
+      debugLog('🔑 Opening portal for Sui signing...');
       const portalWindow = window.open(
         `${portalUrl}?action=sign_sui&sui_tx=${encodeURIComponent(txBytesBase64)}`,
         'portal',
@@ -80,21 +135,25 @@ export function useSuiPasskey() {
       );
 
       if (!portalWindow) {
-        throw new Error('Failed to open portal window');
+        throw new Error('Failed to open portal window. Please check if popups are blocked by your browser.');
       }
 
       // Wait for signature from portal
       const signResult = await new Promise<{signature: string, authenticatorData: string, clientDataJSON: string}>((resolve, reject) => {
+        let timeoutId: ReturnType<typeof setTimeout>;
+
         const handleMessage = (event: MessageEvent) => {
           if (event.origin !== new URL(portalUrl).origin) return;
 
           const { type, signature, authenticatorData, clientDataJSON } = event.data;
 
           if (type === 'sui-sign-result') {
+            clearTimeout(timeoutId);
             window.removeEventListener('message', handleMessage);
             portalWindow.close();
             resolve({ signature, authenticatorData, clientDataJSON });
           } else if (type === 'error') {
+            clearTimeout(timeoutId);
             window.removeEventListener('message', handleMessage);
             portalWindow.close();
             reject(new Error(event.data.message || 'Signing failed'));
@@ -104,14 +163,14 @@ export function useSuiPasskey() {
         window.addEventListener('message', handleMessage);
 
         // Timeout after 5 minutes
-        setTimeout(() => {
+        timeoutId = setTimeout(() => {
           window.removeEventListener('message', handleMessage);
           portalWindow.close();
           reject(new Error('Signing timeout'));
         }, 300000);
       });
 
-      console.log('✅ Received signature from portal');
+      debugLog('✅ Received signature from portal');
 
       // Get the public key from storage
       const storedWallet = PasskeyStorage.getWallet();
@@ -157,7 +216,7 @@ export function useSuiPasskey() {
       // Convert to base64 for transmission
       const fullSignatureBase64 = Buffer.from(fullSignature).toString('base64');
 
-      console.log('🔐 Constructed SIP-9 signature:', {
+      debugLog('🔐 Constructed SIP-9 signature:', {
         userSig: userSignature.length,
         authData: authenticatorDataBytes.length,
         clientData: clientDataJSONBytes.length,
