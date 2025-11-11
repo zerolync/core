@@ -296,17 +296,23 @@ export async function signSuiTransaction(
     displayStatus("Signing Sui transaction...", "info");
 
     // Construct the challenge according to SIP-9:
-    // challenge = intent (3 bytes) || blake2b_hash(intent || tx_data) (32 bytes) = 35 bytes total
+    // The challenge passed to WebAuthn should be ONLY the 32-byte blake2b hash
+    // challenge = blake2b(intent || tx_data)
     const txData = Buffer.from(txBytes, "base64");
     const intentBytes = new Uint8Array([0, 0, 0]); // Transaction intent: scope=0, version=0, app_id=0
 
     // Create intent message: intent || tx_data
     const intentMessage = new Uint8Array([...intentBytes, ...txData]);
-    // Hash the complete intent message
-    const intentMessageHash = blake2b(intentMessage, { dkLen: 32 }); // 32-byte blake2b hash
+    // Hash the complete intent message - THIS is the challenge
+    const challenge = blake2b(intentMessage, { dkLen: 32 }); // 32-byte blake2b hash
 
-    // Final challenge: intent (3 bytes) + hash (32 bytes) = 35 bytes
-    const challenge = new Uint8Array([...intentBytes, ...intentMessageHash]);
+    console.log('🔐 [Portal] SIP-9 Challenge construction:');
+    console.log('   📋 TX data length:', txData.length);
+    console.log('   📋 Intent bytes:', Array.from(intentBytes));
+    console.log('   📋 Intent message length:', intentMessage.length);
+    console.log('   📋 Blake2b hash (challenge):', Buffer.from(challenge).toString('hex').substring(0, 32) + '...');
+    console.log('   📋 Final challenge length:', challenge.length, 'bytes (should be 32)');
+    console.log('   📋 Using credential ID:', credentialId);
 
     const credential = (await navigator.credentials.get({
       publicKey: {

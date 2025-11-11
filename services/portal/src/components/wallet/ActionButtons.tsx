@@ -9,9 +9,11 @@ interface ActionButtonsProps {
   hasMessage: boolean
   hasSuiTx?: boolean
   isSigning: boolean
+  isCreateSui?: boolean
   onSign: () => void
   onSignIn: () => void
   onSignUp: () => void
+  onCreateSui?: () => void
 }
 
 export function ActionButtons({
@@ -20,12 +22,31 @@ export function ActionButtons({
   hasMessage,
   hasSuiTx,
   isSigning,
+  isCreateSui,
   onSign,
   onSignIn,
   onSignUp,
+  onCreateSui,
 }: ActionButtonsProps) {
   const LoadingIcon = () =>
     isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null
+
+  // Show create sui passkey button
+  if (isCreateSui && onCreateSui) {
+    return (
+      <div className="w-full">
+        <Button
+          onClick={onCreateSui}
+          disabled={isLoading}
+          className="w-full"
+          variant="default"
+        >
+          <LoadingIcon />
+          {isLoading ? 'Creating Passkey...' : 'Create Sui Passkey'}
+        </Button>
+      </div>
+    )
+  }
 
   // Show signing button when there's a message to sign OR a Sui transaction
   if (hasMessage || hasSuiTx) {
