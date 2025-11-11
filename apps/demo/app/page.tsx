@@ -23,21 +23,50 @@ function CrossChainWallet() {
   const connectBoth = async () => {
     setIsConnecting(true);
     try {
+      console.log('🔵 [STEP 1] Starting Solana connection...');
+
       // Connect to Solana first (creates/recovers passkey)
-      await solana.connect();
-      console.log('✅ Solana connected, address:', solana.address);
+      try {
+        const solanaResult = await solana.connect();
+        console.log('✅ [STEP 1] Solana connected successfully');
+        console.log('   📋 Solana address:', solana.address);
+        console.log('   📋 Solana result:', JSON.stringify(solanaResult, null, 2));
+      } catch (solanaErr: any) {
+        console.error('❌ [STEP 1] Solana connection failed');
+        console.error('   Error name:', solanaErr?.name);
+        console.error('   Error message:', solanaErr?.message);
+        console.error('   Error stack:', solanaErr?.stack);
+        console.error('   Full error:', solanaErr);
+        throw solanaErr;
+      }
+
+      console.log('🔵 [STEP 2] Starting Sui connection...');
 
       // Then connect to Sui (reuses same passkey)
-      const suiResult = await sui.connect();
-      console.log('✅ Sui connected, result:', suiResult);
+      try {
+        const suiResult = await sui.connect();
+        console.log('✅ [STEP 2] Sui connected successfully');
+        console.log('   📋 Sui result:', JSON.stringify(suiResult, null, 2));
 
-      // Load balances - pass the address directly from the result
-      await Promise.all([
-        checkSolanaBalance(),
-        checkSuiBalance(suiResult.address)
-      ]);
-    } catch (err) {
-      console.error('Failed to connect:', err);
+        // Load balances - pass the address directly from the result
+        console.log('🔵 [STEP 3] Loading balances...');
+        await Promise.all([
+          checkSolanaBalance(),
+          checkSuiBalance(suiResult.address)
+        ]);
+        console.log('✅ [STEP 3] Balances loaded');
+      } catch (suiErr: any) {
+        console.error('❌ [STEP 2] Sui connection failed');
+        console.error('   Error name:', suiErr?.name);
+        console.error('   Error message:', suiErr?.message);
+        console.error('   Error stack:', suiErr?.stack);
+        console.error('   Full error:', suiErr);
+        throw suiErr;
+      }
+    } catch (err: any) {
+      console.error('❌ [OVERALL] Connection failed');
+      console.error('   Error type:', typeof err);
+      console.error('   Error:', err);
     } finally {
       setIsConnecting(false);
     }
@@ -46,21 +75,53 @@ function CrossChainWallet() {
   const createNewWallet = async () => {
     setIsConnecting(true);
     try {
+      console.log('🔵 [NEW WALLET - STEP 0] Resetting wallet...');
       solana.resetWallet();
       await new Promise(resolve => setTimeout(resolve, 100));
-      await solana.connect();
-      console.log('✅ Solana connected, address:', solana.address);
+      console.log('✅ [NEW WALLET - STEP 0] Wallet reset complete');
 
-      const suiResult = await sui.connect();
-      console.log('✅ Sui connected, result:', suiResult);
+      console.log('🔵 [NEW WALLET - STEP 1] Starting Solana connection...');
 
-      // Load balances - pass the address directly from the result
-      await Promise.all([
-        checkSolanaBalance(),
-        checkSuiBalance(suiResult.address)
-      ]);
-    } catch (err) {
-      console.error('Failed to create wallet:', err);
+      try {
+        const solanaResult = await solana.connect();
+        console.log('✅ [NEW WALLET - STEP 1] Solana connected successfully');
+        console.log('   📋 Solana address:', solana.address);
+        console.log('   📋 Solana result:', JSON.stringify(solanaResult, null, 2));
+      } catch (solanaErr: any) {
+        console.error('❌ [NEW WALLET - STEP 1] Solana connection failed');
+        console.error('   Error name:', solanaErr?.name);
+        console.error('   Error message:', solanaErr?.message);
+        console.error('   Error stack:', solanaErr?.stack);
+        console.error('   Full error:', solanaErr);
+        throw solanaErr;
+      }
+
+      console.log('🔵 [NEW WALLET - STEP 2] Starting Sui connection...');
+
+      try {
+        const suiResult = await sui.connect();
+        console.log('✅ [NEW WALLET - STEP 2] Sui connected successfully');
+        console.log('   📋 Sui result:', JSON.stringify(suiResult, null, 2));
+
+        // Load balances - pass the address directly from the result
+        console.log('🔵 [NEW WALLET - STEP 3] Loading balances...');
+        await Promise.all([
+          checkSolanaBalance(),
+          checkSuiBalance(suiResult.address)
+        ]);
+        console.log('✅ [NEW WALLET - STEP 3] Balances loaded');
+      } catch (suiErr: any) {
+        console.error('❌ [NEW WALLET - STEP 2] Sui connection failed');
+        console.error('   Error name:', suiErr?.name);
+        console.error('   Error message:', suiErr?.message);
+        console.error('   Error stack:', suiErr?.stack);
+        console.error('   Full error:', suiErr);
+        throw suiErr;
+      }
+    } catch (err: any) {
+      console.error('❌ [NEW WALLET - OVERALL] Wallet creation failed');
+      console.error('   Error type:', typeof err);
+      console.error('   Error:', err);
     } finally {
       setIsConnecting(false);
     }

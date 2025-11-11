@@ -81,7 +81,7 @@ function Wallet() {
       lamports: 0.1 * LAMPORTS_PER_SOL,
     });
 
-    await signAndSendTransaction(instruction);
+    await (instruction);
   };
 
   return (
