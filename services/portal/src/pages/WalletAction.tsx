@@ -27,14 +27,14 @@ export default function WalletAction() {
   const [message, setMessage] = useState("")
   const [credentials, setCredentials] = useState<Credential[]>([])
   const [selectedCredentialId, setSelectedCredentialId] = useState<string | null>(null)
-  const [, setAction] = useState("")
+  const [action, setAction] = useState("")
   const [, setExpo] = useState("")
   const [isSigning, setIsSigning] = useState(false)
   const [, setReadyToSign] = useState(false)
   const [, setEnvironment] = useState<"browser" | "expo" | "unknown">("unknown")
   const [platformInfo, setPlatformInfo] = useState<PlatformInfo | null>(null)
-  const { handleRedirect, getAutoCloseDelay } = useRedirect()
-  const { autoClose } = useWindowManager()
+  const { /* handleRedirect, getAutoCloseDelay */ } = useRedirect()
+  const { /* autoClose */ } = useWindowManager()
 
   // Initialize platform detection and optimizations
   useEffect(() => {
@@ -194,6 +194,11 @@ export default function WalletAction() {
           } else {
             displayStatus('No Passkey found. Please create one.', 'info')
           }
+        } else if (actionParam === 'create_sui') {
+          // Handle Sui passkey creation - show UI, don't auto-trigger
+          displayStatus('Ready to create Sui passkey', 'info')
+          // Set a flag to show the create button
+          setAction('create_sui')
         } else {
           displayStatus('Error: Invalid action or missing message', 'error')
         }
@@ -225,18 +230,18 @@ export default function WalletAction() {
       
       setStatus({ message: successMessage, type: 'success' })
 
-      const redirectUrl = handleRedirect({
-        success: true,
-        isSignature: responseData.type === 'SIGNATURE_CREATED' || responseData.type === 'sui-sign-result',
-        responseData,
-        messageType: responseData.type === 'SIGNATURE_CREATED' ? 'SIGNATURE_CREATED' : responseData.type === 'sui-sign-result' ? 'sui-sign-result' : 'WALLET_CONNECTED'
-      })
+      // const redirectUrl = handleRedirect({
+      //   success: true,
+      //   isSignature: responseData.type === 'SIGNATURE_CREATED' || responseData.type === 'sui-sign-result',
+      //   responseData,
+      //   messageType: responseData.type === 'SIGNATURE_CREATED' ? 'SIGNATURE_CREATED' : responseData.type === 'sui-sign-result' ? 'sui-sign-result' : responseData.type === 'sui-create-result' ? 'sui-create-result' : 'WALLET_CONNECTED'
+      // })
 
       // Send data to parent/opener
       let messageData: any;
 
-      // For Sui transactions, send the data directly without wrapping
-      if (responseData.type === 'sui-sign-result') {
+      // For Sui operations, send the data directly without wrapping
+      if (responseData.type === 'sui-sign-result' || responseData.type === 'sui-create-result') {
         messageData = responseData;
       } else {
         messageData = {
@@ -263,13 +268,19 @@ export default function WalletAction() {
       }
 
       // Handle redirect or auto-close
-      if (redirectUrl) {
-        setTimeout(() => {
-          window.location.href = redirectUrl
-        }, Math.min(getAutoCloseDelay(), 3000))
-      } else {
-        autoClose(responseData.environment || 'browser', getAutoCloseDelay())
-      }
+      // TEMPORARILY DISABLED FOR DEBUGGING - Window will NOT auto-close
+      console.log('🔍 [DEBUG] Auto-close disabled. Window will stay open for log inspection.');
+      console.log('🔍 [DEBUG] Response data:', responseData);
+
+      // Uncomment below to re-enable auto-close
+      // const delay = responseData.type === 'sui-sign-result' ? 10000 : getAutoCloseDelay();
+      // if (redirectUrl) {
+      //   setTimeout(() => {
+      //     window.location.href = redirectUrl
+      //   }, Math.min(delay, 3000))
+      // } else {
+      //   autoClose(responseData.environment || 'browser', delay)
+      // }
       
     } catch (error) {
       console.error('Success handler error:', error)
@@ -304,7 +315,9 @@ export default function WalletAction() {
     if (window.opener && window.opener !== window) {
       window.opener.postMessage(errorResponse, '*')
       if (isSignatureError) {
-        autoClose('browser', getAutoCloseDelay())
+        // TEMPORARILY DISABLED FOR DEBUGGING - Keep window open
+        // autoClose('browser', getAutoCloseDelay())
+        console.log('🔍 [DEBUG] Auto-close disabled in error handler. Window will stay open for log inspection.');
       }
     }
   }
@@ -370,6 +383,7 @@ export default function WalletAction() {
   const handleSignSui = async () => {
     const urlParams = new URLSearchParams(window.location.search)
     const txBytes = urlParams.get('sui_tx')
+    const requestedCredentialId = urlParams.get('credential_id')
 
     if (!txBytes) {
       handleError('No Sui transaction data provided', new Error('Missing sui_tx parameter'), true)
@@ -383,8 +397,13 @@ export default function WalletAction() {
         throw new Error('No credentials available for signing')
       }
 
-      // Use selected credential or fall back to first one
-      const credentialId = selectedCredentialId || credentials[0].credentialId
+      // Use credential from URL, or selected credential, or fall back to first one
+      const credentialId = requestedCredentialId || selectedCredentialId || credentials[0].credentialId
+      console.log('🔑 [Portal] Signing with credential:', credentialId)
+      console.log('🔑 [Portal] Requested credential ID:', requestedCredentialId)
+      console.log('🔑 [Portal] Available credentials:', credentials.map(c => c.credentialId))
+      console.log('🔑 [Portal] Selected credential ID:', selectedCredentialId)
+
       const signResult = await signSuiTransaction(credentialId, txBytes, displayStatus)
 
       const responseData = {
@@ -446,19 +465,25 @@ export default function WalletAction() {
   }
   
   // Function to handle sign up option
-  const handleSignUp = async (environment: string = 'browser', expoParam?: string) => {
+  const handleSignUp = async (environment: string = 'browser', expoParam?: string, isSuiOnly: boolean = false) => {
     try {
       setIsLoading(true)
       setStatus({ message: 'Creating new passkey...', type: 'info' })
-      
+
       const signUpData = await signUp(displayStatus)
-      
+
       // Save credential ID and public key to local storage
       await saveCredential(signUpData.credentialId, signUpData.publickey)
       const updatedCreds = await getStoredCredentials()
       setCredentials(updatedCreds)
-      
+
       const responseData = {
+        type: isSuiOnly ? 'sui-create-result' : undefined,
+        data: isSuiOnly ? {
+          suiAddress: signUpData.suiAddress,
+          credentialId: signUpData.credentialId,
+          publicKey: signUpData.publickey
+        } : undefined,
         credentialId: signUpData.credentialId,
         publickey: signUpData.publickey,
         suiAddress: signUpData.suiAddress, // Include Sui address
@@ -469,7 +494,7 @@ export default function WalletAction() {
         platform: environment === 'expo' ? 'mobile' : 'web',
         status: signUpData.status
       }
-      
+
       await handleSuccess(responseData, `New account created successfully!`)
     } catch (err) {
       handleError('Failed to create new account', err, false)
@@ -564,6 +589,7 @@ export default function WalletAction() {
               hasMessage={!!message}
               hasSuiTx={!!new URLSearchParams(window.location.search).get('sui_tx')}
               isSigning={isSigning}
+              isCreateSui={action === 'create_sui'}
               onSign={(() => {
                 const urlParams = new URLSearchParams(window.location.search)
                 const suiTx = urlParams.get('sui_tx')
@@ -585,6 +611,7 @@ export default function WalletAction() {
                 }
               }}
               onSignUp={() => handleSignUp(currentEnvironment, currentExpoParam || undefined)}
+              onCreateSui={() => handleSignUp(currentEnvironment, currentExpoParam || undefined, true)}
             />
           </CardFooter>
         </Card>

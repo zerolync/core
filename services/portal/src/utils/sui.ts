@@ -3,8 +3,8 @@ import { secp256r1 } from '@noble/curves/p256';
 import { PasskeyPublicKey } from '@mysten/sui/keypairs/passkey';
 
 /**
- * Derive Sui address from the same secp256r1 public key used for Solana
- * For passkeys, the address is derived using flag 0x06 (not 0x02 like regular secp256r1)
+ * Derive Sui address from the passkey public key
+ * According to SIP-9, passkey addresses are derived using PasskeyPublicKey (flag 0x06)
  * @param compressedPublicKey - Base64 encoded compressed public key from passkey
  * @returns Sui address (0x...)
  */
@@ -14,11 +14,14 @@ export function deriveSuiAddress(compressedPublicKey: string): string {
     const publicKeyBytes = Buffer.from(compressedPublicKey, 'base64');
 
     // Create Sui PasskeyPublicKey from the compressed bytes
-    // This uses flag 0x06 for address derivation (passkey-specific)
+    // This uses flag 0x06 for address derivation (passkey scheme)
     const suiPublicKey = new PasskeyPublicKey(publicKeyBytes);
 
     // Get Sui address
     const suiAddress = suiPublicKey.toSuiAddress();
+
+    console.log('✅ [Portal] Derived Sui address:', suiAddress);
+    console.log('   📋 Public key bytes:', publicKeyBytes.length);
 
     return suiAddress;
   } catch (error) {

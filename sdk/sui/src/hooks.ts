@@ -182,7 +182,8 @@ export function useSuiPasskey() {
       const signatureBytes = Buffer.from(signResult.signature, 'base64'); // 64 bytes (r + s)
       const publicKeyBytes = Buffer.from(storedWallet.passkey.publicKey, 'base64'); // 33 bytes compressed
       const authenticatorDataBytes = Buffer.from(signResult.authenticatorData, 'base64');
-      const clientDataJSONBytes = Buffer.from(signResult.clientDataJSON, 'base64');
+      // clientDataJSON should be decoded as a UTF-8 string, not kept as bytes
+      const clientDataJSONString = Buffer.from(signResult.clientDataJSON, 'base64').toString('utf-8');
 
       // Construct the userSignature according to SIP-9:
       // userSignature = [0x02] + signature(64 bytes) + publicKey(33 bytes)
@@ -194,16 +195,17 @@ export function useSuiPasskey() {
 
       // Define PasskeyAuthenticator struct for BCS serialization
       // IMPORTANT: Field names must match the Move struct exactly (snake_case)
+      // CRITICAL: client_data_json is bcs.string(), NOT bcs.vector(bcs.u8())
       const PasskeyAuthenticatorStruct = bcs.struct('PasskeyAuthenticator', {
         authenticator_data: bcs.vector(bcs.u8()),
-        client_data_json: bcs.vector(bcs.u8()),
+        client_data_json: bcs.string(),
         user_signature: bcs.vector(bcs.u8()),
       });
 
       // Serialize the PasskeyAuthenticator struct
       const passkeyAuthenticator = PasskeyAuthenticatorStruct.serialize({
         authenticator_data: Array.from(authenticatorDataBytes),
-        client_data_json: Array.from(clientDataJSONBytes),
+        client_data_json: clientDataJSONString,
         user_signature: Array.from(userSignature),
       }).toBytes();
 
@@ -219,7 +221,7 @@ export function useSuiPasskey() {
       debugLog('🔐 Constructed SIP-9 signature:', {
         userSig: userSignature.length,
         authData: authenticatorDataBytes.length,
-        clientData: clientDataJSONBytes.length,
+        clientDataString: clientDataJSONString.length,
         totalBCS: passkeyAuthenticator.length,
         fullSignature: fullSignature.length
       });

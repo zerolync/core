@@ -85,7 +85,34 @@ export function useSolanaPasskey() {
     // Clear any previous suiAddress
     suiAddressRef.current = null;
 
-    const result = await lazorConnect();
+    console.log('🔵 [LazorKit] Calling lazorConnect()...');
+    console.log('🔵 [LazorKit] Portal URL:', portalUrl);
+
+    let result;
+    try {
+      result = await lazorConnect();
+      console.log('✅ [LazorKit] lazorConnect() successful');
+      console.log('📋 [LazorKit] Result:', result);
+    } catch (err: any) {
+      console.error('❌ [LazorKit] lazorConnect() failed');
+      console.error('📋 [LazorKit] Error name:', err?.name);
+      console.error('📋 [LazorKit] Error message:', err?.message);
+      console.error('📋 [LazorKit] Error cause:', err?.cause);
+      console.error('📋 [LazorKit] Error stack:', err?.stack);
+
+      // Try to extract instruction info if available
+      if (err?.instruction) {
+        console.error('📋 [LazorKit] Failed instruction:', err.instruction);
+      }
+      if (err?.instructionName) {
+        console.error('📋 [LazorKit] Failed instruction name:', err.instructionName);
+      }
+      if (err?.logs) {
+        console.error('📋 [LazorKit] Transaction logs:', err.logs);
+      }
+
+      throw err;
+    }
 
     const storedWallet = PasskeyStorage.getWallet();
     const walletInfo: WalletInfo = {
